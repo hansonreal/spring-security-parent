@@ -11,12 +11,7 @@
     <version>1.0.0</version>
 
 
-    <modules>
-        <module>spring-security-day-01</module>
-        <module>spring-security-day-02</module>
-        <module>spring-security-day-03</module>
-        <module>spring-security-day-04</module>
-    </modules>
+   
 
 
     <properties>
