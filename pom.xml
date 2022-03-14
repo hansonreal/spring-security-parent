@@ -10,13 +10,14 @@
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
-
-   
+    <modules>
+        <module>spring-security-xml</module>
+    </modules>
 
 
     <properties>
-        <spring.version>5.1.6.RELEASE</spring.version>
-        <spring-security.version>5.1.6.RELEASE</spring-security.version>
+        <spring.version>3.2.6.RELEASE</spring.version>
+        <spring-security.version>3.2.6.RELEASE</spring-security.version>
         <mybatis.version>3.5.1</mybatis.version>
         <mybatis-spring.version>2.0.1</mybatis-spring.version>
         <slf4j.version>1.7.26</slf4j.version>
