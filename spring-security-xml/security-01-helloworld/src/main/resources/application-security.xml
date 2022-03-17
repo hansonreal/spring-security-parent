@@ -7,8 +7,43 @@
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security.xsd">
 
-        <security:http>
 
-        </security:http>
+    <!--
+        1、配置了auto-config='true'相当于配置了如下内容：
+        <security:http>
+          <security:form-login/>
+          <security:http-basic/>
+          <security:logout/>
+       </security:http>
+       这些元素负责建立表单登录、基本的认证和登出处理。它们都可以通过指定对应的属性来改变它们的行为。
+
+        2、intercept-url：定义了一个权限控制规则
+        3、pattern：该属性用于对哪些URL进行权限控制，支持正则表达式，例如“/**”表示对所有的URL进行权限控制
+        4、access：该属性表示在请求对应的URL时需要什么权限，默认配置时它应该是一个以逗号分隔的角色列表，
+                请求的用户只需拥有其中的一个角色就能成功访问对应的URL。这里的“ROLE_USER”表示请求的用户应当具有“ROLE_USER”角色。
+                “ROLE_”前缀是一个Spring使用基于角色的检查标记
+    -->
+    <security:http auto-config="true">
+        <security:intercept-url pattern="/**" access="ROLE_USER"/>
+    </security:http>
+
+    <!--
+        authentication-manager：该元素指定了一个AuthenticationManager(认证管理器)，
+            它需要一个AuthenticationProvider(对应authentication-provider元素)来进行真正的认证，
+            默认情况下authentication-provider对应一个DaoAuthenticationProvider，
+            其需要UserDetailsService(对应user-service元素)来获取用户信息UserDetails(对应user元素)，
+            此处只是简单使用user元素来定义用户，实际场景这些信息应该从数据库等地方获取的。
+            通过user元素可以指定user对应的用户名、密码和拥有的权限。
+            user-service还支持通过properties来指定用户信息
+    -->
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user name="admin" password="admin" authorities="ROLE_ADMIN,ROLE_USER"/>
+                <security:user name="user" password="user" authorities="ROLE_USER"/>
+            </security:user-service>
+            <security:user-service properties="user.properties"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
 
 </beans>

@@ -14,7 +14,6 @@
         <module>spring-security-xml</module>
     </modules>
 
-
     <properties>
         <spring.version>3.2.6.RELEASE</spring.version>
         <spring-security.version>3.2.6.RELEASE</spring-security.version>
@@ -122,10 +121,12 @@
                 <plugin>
                     <groupId>org.apache.tomcat.maven</groupId>
                     <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>2.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.1</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
