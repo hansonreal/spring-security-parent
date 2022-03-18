@@ -12,6 +12,7 @@
 
     <modules>
         <module>security-01-helloworld</module>
+        <module>security-02-login</module>
     </modules>
 
     <artifactId>spring-security-xml</artifactId>
