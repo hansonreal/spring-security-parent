@@ -1,10 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>首页</title>
+    <title>失败</title>
 </head>
 <body>
-    这是首页
+    这是失败界面
 </body>
 </html>

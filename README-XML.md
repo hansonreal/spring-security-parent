@@ -6,3 +6,5 @@
 
 ## 1.2、[Spring Security 关于登录](./docs/xml/Spring Security-02.md)
 
+## 1.3、[Spring Security 核心类介绍](./docs/xml/Spring Security-03.md)
+

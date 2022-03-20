@@ -26,6 +26,7 @@
         <servlet-api.version>4.0.1</servlet-api.version>
         <jsr250-api.version>1.0</jsr250-api.version>
         <lombok.version>1.18.8</lombok.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencyManagement>

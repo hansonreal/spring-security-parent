@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-02-login</artifactId>
+
+
     <packaging>war</packaging>
 
     <dependencies>
@@ -54,7 +56,6 @@
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
         </dependency>
-
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>jsr250-api</artifactId>
