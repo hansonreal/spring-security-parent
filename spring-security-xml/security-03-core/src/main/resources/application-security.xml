@@ -21,10 +21,12 @@
     <bean id="authFailureHandler" class="com.github.security.AuthenticationFailureHandlerImpl"/>
 
 
+    <bean id="userDetailsService" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
     <security:authentication-manager>
-        <security:authentication-provider>
-            <security:user-service properties="/WEB-INF/user.properties"/>
-        </security:authentication-provider>
+        <security:authentication-provider user-service-ref="userDetailsService"/>
     </security:authentication-manager>
 
 
