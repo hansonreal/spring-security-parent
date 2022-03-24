@@ -11,6 +11,9 @@
 
     <artifactId>security-02-login</artifactId>
 
+    <name>xml-security-02-login :: 自定义登录</name>
+
+
 
     <packaging>war</packaging>
 

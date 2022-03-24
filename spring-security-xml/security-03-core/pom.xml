@@ -11,6 +11,9 @@
 
     <artifactId>security-03-core</artifactId>
 
+    <name>xml-security-03-core :: 核心类</name>
+
+
     <packaging>war</packaging>
 
     <dependencies>

@@ -9,10 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>security-01-helloworld</artifactId>
+    <artifactId>security-04-authentication</artifactId>
 
-    <name>xml-security-01-helloworld :: 入门程序</name>
 
+    <name>xml-security-04-authentication :: 认证</name>
 
     <packaging>war</packaging>
 
@@ -73,9 +73,9 @@
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <configuration>
-                    <path>/security-01</path>
+                    <path>/security-04</path>
                     <uriEncoding>UTF-8</uriEncoding>
-                    <port>8001</port>
+                    <port>8004</port>
                 </configuration>
             </plugin>
             <!-- maven插件控制 -->
@@ -90,4 +90,7 @@
             </plugin>
         </plugins>
     </build>
+
+
+
 </project>
