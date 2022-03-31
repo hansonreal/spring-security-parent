@@ -46,7 +46,7 @@ public class ProviderManager implements AuthenticationManager,XX{
 
 上述配置中dataSource是对应数据源配置的bean引用。使用此种方式需要我们的数据库拥有如下表和表结构：
 
-参考[第三章节部分](Spring Security-03.md)
+参考[第三章节部分](./Spring Security-03.md#151jdbcdaoimplddml)
 
 当然这只是默认配置及默认的表结构。如果我们的表名或者表结构跟Spring Security默认的不一样，我们可以通过以下几个属性来定义我们自己查询用户信息、用户权限和用户组权限的SQL。
 

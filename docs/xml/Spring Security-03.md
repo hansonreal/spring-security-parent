@@ -176,7 +176,7 @@ if (result != null) {
 
 上述代码中我们使用的JdbcDaoImpl是Spring Security为我们提供的UserDetailsService的实现，另外Spring Security还为我们提供了UserDetailsService另外一个实现`InMemoryDaoImpl`。其作用是从数据库中加载UserDetails信息。其中已经定义好了加载相关信息的默认脚本，这些脚本也可以通过JdbcDaoImpl的相关属性进行指定。
 
-### 1.5.1、JdbcDaoImpl
+### 1.5.1、[JdbcDaoImpl](ddml)
 
 JdbcDaoImpl允许我们从数据库来加载UserDetails，其底层使用的是Spring的JdbcTemplate进行操作，所以我们需要给其指定一个数据源。此外，我们需要通过usersByUsernameQuery属性指定通过username查询用户信息的SQL语句；通过authoritiesByUsernameQuery属性指定通过username查询用户所拥有的权限的SQL语句；如果我们通过设置JdbcDaoImpl的enableGroups为true启用了用户组权限的支持，则我们还需要通过groupAuthoritiesByUsernameQuery属性指定根据username查询用户组权限的SQL语句。当这些信息都没有指定时，将使用默认的SQL语句，默认的SQL语句如下所示：
 
