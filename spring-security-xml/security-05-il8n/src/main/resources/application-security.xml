@@ -29,4 +29,14 @@
     </security:authentication-manager>
 
 
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <array>
+                <value>classpath:com/github/message</value>
+                <value>classpath:org/springframework/security/messages</value>
+            </array>
+        </property>
+    </bean>
+
+
 </beans>
