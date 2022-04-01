@@ -45,7 +45,9 @@
         <property name="enableAuthorities" value="true"/>
     </bean>
     <security:authentication-manager>
-        <security:authentication-provider user-service-ref="userDetailsService"/>
+        <security:authentication-provider user-service-ref="userDetailsService">
+            <security:password-encoder ref=""/>
+        </security:authentication-provider>
     </security:authentication-manager>
 
 </beans>

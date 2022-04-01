@@ -102,3 +102,41 @@ public class ProviderManager implements AuthenticationManager,XX{
 
 ## 1.2、PasswordEncoder
 
+### 1.2.1  使用内置的PasswordEncoder
+
+通常我们保存的密码都不会按照明文保存，而是保存加密之后的结果。为此，我们需要在`AuthenticationProvider`在做认证时也需要将传递的明文密码使用对应的算法加密后再与保存好的密码做比较。
+
+Spring Security对这方面也有支持。通过在`authentication-provider`下定义一个`password-encoder`我们可以定义当前`AuthenticationProvider`需要在进行认证时需要使用的`password-encoder`。
+
+password-encoder是一个PasswordEncoder的实例，我们可以直接使用它，如：
+
+```xml
+<security:authentication-manager>
+    <security:authentication-provider user-service-ref="userDetailsService">
+        <security:password-encoder hash="md5"/>
+    </security:authentication-provider>
+</security:authentication-manager>
+```
+
+ 其属性hash表示我们将用来进行加密的哈希算法，系统已经为我们实现的有plaintext、sha、sha-256、md4、md5、{sha}和{ssha}。它们对应的
+
+`org.springframework.security.authentication.encoding.PasswordEncoder`实现类如下：
+
+| 加密算法    | PasswordEncoder实现类                                 |
+| :-------- | ----------------------------------------------------- |
+| plaintext | PlaintextPasswordEncoder                              |
+| sha       | ShaPasswordEncoder                                    |
+| sha-256   | ShaPasswordEncoder，使用时new ShaPasswordEncoder(256) |
+| md4       | Md4PasswordEncoder                                    |
+| md5       | Md5PasswordEncoder                                    |
+| {sha}     | LdapShaPasswordEncoder                                |
+| {ssha}    | LdapShaPasswordEncoder                                |
+
+该类现在已经不是Spring Security首选推荐的加密算法而是使用`org.springframework.security.crypto.password.PasswordEncoder`,它对应的实现类如下：
+
+| PasswordEncoder实现类       | 加密器说明                                             |
+| --------------------------- | ------------------------------------------------------ |
+| **NoOpPasswordEncoder**     | 用于测试阶段                                           |
+| **StandardPasswordEncoder** | 标准加密器，SHA-256+10位随机数进行1024次迭代计算出密文 |
+| **BCryptPasswordEncoder**   | 单向HASH，不可逆                                       |
+
