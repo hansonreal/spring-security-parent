@@ -132,7 +132,90 @@ password-encoder是一个PasswordEncoder的实例，我们可以直接使用它�
 | {sha}     | LdapShaPasswordEncoder                                |
 | {ssha}    | LdapShaPasswordEncoder                                |
 
-该类现在已经不是Spring Security首选推荐的加密算法而是使用`org.springframework.security.crypto.password.PasswordEncoder`,它对应的实现类如下：
+#### 1.2.1.1 使用BASE64编码加密后的密码
+
+使用password-encoder时我们还可以指定一个属性base64，表示是否需要对加密后的密码使用BASE64进行编码，默认是false。如果需要则设为true。
+
+```xml
+<security:password-encoder hash="md5" base64="true"/>
+```
+
+#### 1.2.1.2、加密时使用salt
+
+加密时使用salt也是很常见的需求，Spring Security内置的password-encoder也对它有支持。通过password-encoder元素下的子元素salt-source，我们可以指定当前PasswordEncoder需要使用的salt。这个salt可以是一个常量，也可以是当前UserDetails的某一个属性，还可以通过实现`SaltSource`接口实现自己的获取salt的逻辑，`SaltSource`中只定义了如下一个方法:
+
+```java
+public interface SaltSource {
+    Object getSalt(UserDetails user);
+}
+```
+
+#### 1.2.1.3、使用常量“abc”作为salt
+
+```xml
+<security:authentication-manager>
+    <security:authentication-provider user-service-ref="userDetailsService">
+        <security:password-encoder hash="md5" base64="true">
+            <security:salt-source system-wide="abc"/>
+        </security:password-encoder>
+    </security:authentication-provider>
+</security:authentication-manager>
+```
+
+#### 1.2.1.4、使用UserDetails的username作为salt
+
+```xml
+<security:authentication-manager>
+    <security:authentication-provider user-service-ref="userDetailsService">
+        <security:password-encoder hash="md5" base64="true">
+            <security:salt-source user-property="username"/>
+        </security:password-encoder>
+    </security:authentication-provider>
+</security:authentication-manager>
+```
+
+#### 1.2.1.5、自定义实现
+
+```xml
+<security:authentication-manager>
+    <security:authentication-provider user-service-ref="userDetailsService">
+        <security:password-encoder hash="md5" base64="true">
+            <security:salt-source ref="mySaltSource"/>
+        </security:password-encoder>
+    </security:authentication-provider>
+</security:authentication-manager>
+<bean id="mySaltSource" class="com.github.MySaltSource"/>
+```
+
+需要注意的是`AuthenticationProvider`进行认证时所使用的`PasswordEncoder`，包括它们的算法和规则都应当与我们保存用户密码时是一致的。也就是说如果`AuthenticationProvider`使用`Md5PasswordEncoder`进行认证，我们在保存用户密码时也需要使用`Md5PasswordEncoder`；如果`AuthenticationProvider`在认证时使用了username作为salt，那么我们在保存用户密码时也需要使用username作为salt。如:
+
+```java
+Md5PasswordEncoder encoder = new Md5PasswordEncoder();
+
+encoder.setEncodeHashAsBase64(true);
+
+System.out.println(encoder.encodePassword("user", "user"));
+```
+
+### 1.2.2、使用自定义PasswordEncoder
+
+除了通过password-encoder使用Spring Security已经为我们实现了的PasswordEncoder之外，我们也可以实现自己的PasswordEncoder，然后通过password-encoder的ref属性关联到我们自己实现的PasswordEncoder对应的bean对象。
+
+```xml
+<security:authentication-manager>
+    <security:authentication-provider user-service-ref="userDetailsService">
+        <security:password-encoder ref="passwordEncoder"/>
+    </security:authentication-provider>
+</security:authentication-manager>
+<bean id="passwordEncoder" class="com.github.MyPasswordEncoder"/>
+```
+
+在Spring Security内部定义有两种类型的PasswordEncoder，分别是：
+
+- `org.springframework.security.authentication.encoding.PasswordEncoder`
+- `org.springframework.security.crypto.password.PasswordEncoder`
+
+直接通过password-encoder元素的hash属性指定使用内置的PasswordEncoder都是基于org.springframework.security.authentication.encoding.PasswordEncoder的实现，然而它现在已经被废弃了，Spring Security推荐我们使用org.springframework.security.crypto.password.PasswordEncoder，它的设计理念是为了使用随机生成的salt。关于后者Spring Security也已经提供了几个实现类：
 
 | PasswordEncoder实现类       | 加密器说明                                             |
 | --------------------------- | ------------------------------------------------------ |
@@ -140,3 +223,4 @@ password-encoder是一个PasswordEncoder的实例，我们可以直接使用它�
 | **StandardPasswordEncoder** | 标准加密器，SHA-256+10位随机数进行1024次迭代计算出密文 |
 | **BCryptPasswordEncoder**   | 单向HASH，不可逆                                       |
 
+我们在通过password-encoder使用自定义的PasswordEncoder时两种PasswordEncoder的实现类都是支持的

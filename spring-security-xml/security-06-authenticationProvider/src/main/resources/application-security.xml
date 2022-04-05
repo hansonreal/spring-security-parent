@@ -46,8 +46,22 @@
     </bean>
     <security:authentication-manager>
         <security:authentication-provider user-service-ref="userDetailsService">
-            <security:password-encoder ref=""/>
+            <security:password-encoder hash="md5" base64="true">
+                <security:salt-source ref="mySaltSource"/>
+            </security:password-encoder>
         </security:authentication-provider>
     </security:authentication-manager>
+
+    <bean id="mySaltSource" class="com.github.MySaltSource"/>
+
+
+
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="userDetailsService">
+            <security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+    <bean id="passwordEncoder" class="com.github.MyPasswordEncoder"/>
+
 
 </beans>
