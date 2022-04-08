@@ -13,3 +13,5 @@
 ## 1.5、[Spring Security 异常信息国际化](./docs/xml/Spring Security-05.md)
 
 ## 1.6、[Spring Security 认证提供程序](./docs/xml/Spring Security-06.md)
+
+1.7、[Spring Security 缓存UserDetailsService](./docs/xml/Spring Security-07.md)

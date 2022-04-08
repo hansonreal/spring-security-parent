@@ -17,6 +17,7 @@
         <module>security-04-authentication</module>
         <module>security-05-il8n</module>
         <module>security-06-authenticationProvider</module>
+        <module>security-07-cache</module>
     </modules>
 
     <artifactId>spring-security-xml</artifactId>

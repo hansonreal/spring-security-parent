@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <security:http auto-config="true">
+        <security:form-login login-page="/login.jsp" login-processing-url="/login.do"
+                             username-parameter="username"
+                             password-parameter="password"
+                             default-target-url="/index.jsp"
+                             authentication-failure-url="/failure.jsp"
+                             always-use-default-target="true"/>
+        <security:intercept-url pattern="/login.jsp" access="ROLE_ANONYMOUS"/>
+        <security:intercept-url pattern="/user.jsp" access="ROLE_USER"/>
+        <security:intercept-url pattern="/admin.jsp" access="ROLE_ADMIN"/>
+    </security:http>
+
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider user-service-ref="cachingUserDetailsService"/>
+    </security:authentication-manager>
+
+    <bean id="delegate" class="com.github.CustomUserDetailsService"/>
+
+    <!-- 将使用默认的CacheManager创建一个名为ehcache4UserDetails的Ehcache对象 -->
+    <bean id="ehcache4UserDetails" class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
+
+    <bean id="ehCacheBasedUserCache" class="org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache">
+        <property name="cache" ref="ehcache4UserDetails"/>
+    </bean>
+
+    <bean id="cachingUserDetailsService" class="org.springframework.security.config.authentication.CachingUserDetailsService">
+        <!--真正的UserDetailsService-->
+        <constructor-arg name="delegate" ref="delegate"/>
+        <property name= "userCache" ref="ehCacheBasedUserCache"/>
+    </bean>
+
+
+
+
+
+
+
+
+
+
+</beans>
