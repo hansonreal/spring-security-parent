@@ -85,7 +85,25 @@ public class EhCacheBasedUserCache implements UserCache, InitializingBean {
 配置一个支持缓存UserDetails的CachingUserDetailsService的示例：
 
 ```xml
+<security:authentication-manager alias="authenticationManager">
+    <security:authentication-provider user-service-ref="cachingUserDetailsService"/>
+</security:authentication-manager>
+
+<bean id="delegate" class="com.github.CustomUserDetailsService"/>
+
+<!-- 将使用默认的CacheManager创建一个名为ehcache4UserDetails的Ehcache对象 -->
+<bean id="ehcache4UserDetails" class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
+
+<bean id="ehCacheBasedUserCache" class="org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache">
+    <property name="cache" ref="ehcache4UserDetails"/>
+</bean>
+
+<bean id="cachingUserDetailsService" class="org.springframework.security.config.authentication.CachingUserDetailsService">
+    <!--真正的UserDetailsService-->
+    <constructor-arg name="delegate" ref="delegate"/>
+    <property name= "userCache" ref="ehCacheBasedUserCache"/>
+</bean>
 ```
 
-
+通过`EhcacheFactoryBean`定义的Ehcache bean对象采用的是默认配置，其将使用默认的`CacheManager`，即直接通过`CacheManager.getInstance()`获取当前已经存在的`CacheManager`对象，如不存在则使用默认配置自动创建一个，当然这可以通过cacheManager属性指定我们需要使用的`CacheManager`，`CacheManager`可以通过`EhCacheManagerFactoryBean`进行定义。此外，如果没有指定对应缓存的名称，默认将使用beanName，在上述配置中即为*ehcache4UserDetails*，可以通过cacheName属性进行指定。此外，缓存的配置信息也都是使用的默认的。
 
