@@ -66,9 +66,12 @@ Spring Security给我们定义好的FilterChain中Filter对应的位置顺序、
 | FILTER_SECURITY_INTERCEPTOR  | `FilterSecurityInterceptor`                     | http                                        |
 | SWITCH_USER_FILTER           | `SwitchUserFilter`                              | N/A                                         |
 
-
-
 ## 1.3、DelegatingFilterProxy
+
+```XML
+```
+
+
 
 ## 1.4、FilterChainProxy
 
