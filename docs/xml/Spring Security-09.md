@@ -15,13 +15,13 @@
 - 5、`SecurityContextHolderAwareRequestFilter`：将会把HttpServletRequest封装成一个继承自HttpServletRequestWrapper的SecurityContextHolderAwareRequestWrapper，同时使用SecurityContext实现了HttpServletRequest中与安全相关的方法。
 - 6、`JaasApiIntegrationFilter`：如果SecurityContextHolder中拥有的Authentication是一个JaasAuthenticationToken，那么该Filter将使用包含在JaasAuthenticationToken中的Subject继续执行FilterChain。
 - 7、`RememberMeAuthenticationFilter`：如果之前的认证处理机制没有更新SecurityContextHolder，并且用户请求包含了一个Remember-Me对应的cookie，那么一个对应的Authentication将会设给SecurityContextHolder。
-- 8、`AnonymousAuthenticationFilter`：如果之前的认证机制都没有更新SecurityContextHolder拥有的Authentication，那么一个AnonymousAuthenticationToken将会设给SecurityContextHolder。
+- 8、`AnonymousAuthenticationFilter`：如果之前的认证机制都没有更新SecurityContextHolder拥有的Authentication，那么一个AnonymousAuthenticationToken将会设置给SecurityContextHolder。
 - 9、`ExceptionTransactionFilter`：用于处理在FilterChain范围内抛出的AccessDeniedException和AuthenticationException，并把它们转换为对应的Http错误码返回或者对应的页面。
 - 10、`FilterSecurityInterceptor`：保护Web URI，并且在访问被拒绝时抛出异常。
 
 ## 1.2、添加Filter到FilterChain
 
-基于XML配置Spring Security时，Spring Security会自动为开发者建立对应的FilterChain以及其中的Filter。但是有时候我们需要添加自定义Filter到FilterChain中，又或者是因为某些特性需要自己显示的定义Spring Security已经为我们提供好的Filter，然后再把它们添加到FilterChain。
+当我们基于XML配置Spring Security时，Spring Security会自动为我们建立对应的FilterChain以及其中的Filter。但是有时候我们需要添加自定义Filter到FilterChain中，又或者是因为某些特性需要自己显示的定义Spring Security已经为我们提供好的Filter，然后再把它们添加到FilterChain。
 
 通过http元素下的`custom-filter`元素来定义自定义的Filter：
 
@@ -40,38 +40,44 @@
 </security:http>
 ```
 
-定义`custom-filter`时需要我们通过ref属性指定其对应关联的是哪个Filter，此外还需要通过position、before或者after指定该Filter放置的位置。
+定义`custom-filter`时需要我们通过ref属性指定其对应关联的是哪个Filter，此外还需要通过**position**、**before**或者**after**指定该Filter放置的位置。
 
-Spring Security对`FilterChain`中Filter顺序是有严格的规定的。Spring Security对那些内置的Filter都指定了一个别名，同时指定了它们的位置。我们在定义custom-filter的position、before和after时使用的值就是对应着这些别名所处的位置。如`position="CAS_FILTER"`就表示将定义的Filter放在CAS_FILTER对应的那个位置，`before="CAS_FILTER"`就表示将定义的Filter放在CAS_FILTER之前，`after="CAS_FILTER"`就表示将定义的Filter放在CAS_FILTER之后。此外还有两个特殊的位置可以指定，FIRST和LAST，分别对应第一个和最后一个Filter，如你想把定义好的Filter放在最后，则可以使用`after="LAST"`。
+Spring Security对`FilterChain`中Filter顺序是有严格的规定的。Spring Security对那些内置的Filter都指定了一个别名，同时指定了它们的位置。我们在定义`custom-filter`的**position**、**before**和**after**时使用的值就是对应着这些别名所处的位置。如`position="CAS_FILTER"`就表示将定义的Filter放在CAS_FILTER对应的那个位置，`before="CAS_FILTER"`就表示将定义的Filter放在CAS_FILTER之前，`after="CAS_FILTER"`就表示将定义的Filter放在CAS_FILTER之后。此外还有两个特殊的位置可以指定，FIRST和LAST，分别对应第一个和最后一个Filter，如你想把定义好的Filter放在最后，则可以使用`after="LAST"`。
 
 Spring Security给我们定义好的FilterChain中Filter对应的位置顺序、它们的别名以及将触发自动添加到FilterChain的元素或属性定义。下面的定义是按顺序的：
 
-| 别名                         | Filter类                                        | 对应元素或属性                              |
-| :--------------------------- | :---------------------------------------------- | ------------------------------------------- |
-| CHANNEL_FILTER               | `ChannelProcessingFilter`                       | http>intercept-url>requires-channel         |
-| SECURITY_CONTEXT_FILTER      | `SecurityContextPersistenceFilter`              | http                                        |
-| CONCURRENT_SESSION_FILTER    | `ConcurrentSessionFilter`                       | http>session-management>concurrency-control |
-| LOGOUT_FILTER                | `LogoutFilter`                                  | http>logout                                 |
-| X509_FILTER                  | `X509AuthenticationFilter`                      | http>x509                                   |
-| PRE_AUTH_FILTER              | `AstractPreAuthenticatedProcessingFilter`的子类 | N/A                                         |
-| CAS_FILTER                   | `CasAuthenticationFilter`                       | N/A                                         |
-| FORM_LOGIN_FILTER            | `UsernamePasswordAuthenticationFilter`          | http>form-login                             |
-| BASIC_AUTH_FILTER            | `BasicAuthenticationFilter`                     | http>http-basic                             |
-| SERVLET_API_SUPPORT_FILTER   | `SecurityContextHolderAwareRequestFilter`       | http>servlet-api-provision                  |
-| JAAS_API_SUPPORT_FILTER      | `JaasApiIntegrationFilter`                      | http>jaas-api-provision                     |
-| REMEMBER_ME_FILTER           | `RememberMeAuthenticationFilter`                | http>remember-me                            |
-| ANONYMOUS_FILTER             | `AnonymousAuthenticationFilter`                 | http>anonymous                              |
-| SESSION_MANAGEMENT_FILTER    | `SessionManagementFilter`                       | http>session-management                     |
-| EXCEPTION_TRANSLATION_FILTER | `ExceptionTranslationFilter`                    | http                                        |
-| FILTER_SECURITY_INTERCEPTOR  | `FilterSecurityInterceptor`                     | http                                        |
-| SWITCH_USER_FILTER           | `SwitchUserFilter`                              | N/A                                         |
+| 别名                             | Filter类                                        | 对应元素或属性                              |
+| :------------------------------- | :---------------------------------------------- | ------------------------------------------- |
+| **CHANNEL_FILTER**               | `ChannelProcessingFilter`                       | http>intercept-url>requires-channel         |
+| **SECURITY_CONTEXT_FILTER**      | `SecurityContextPersistenceFilter`              | http                                        |
+| **CONCURRENT_SESSION_FILTER**    | `ConcurrentSessionFilter`                       | http>session-management>concurrency-control |
+| **LOGOUT_FILTER**                | `LogoutFilter`                                  | http>logout                                 |
+| **X509_FILTER**                  | `X509AuthenticationFilter`                      | http>x509                                   |
+| **PRE_AUTH_FILTER**              | `AstractPreAuthenticatedProcessingFilter`的子类 | N/A                                         |
+| **CAS_FILTER**                   | `CasAuthenticationFilter`                       | N/A                                         |
+| **FORM_LOGIN_FILTER**            | `UsernamePasswordAuthenticationFilter`          | http>form-login                             |
+| **BASIC_AUTH_FILTER**            | `BasicAuthenticationFilter`                     | http>http-basic                             |
+| **SERVLET_API_SUPPORT_FILTER**   | `SecurityContextHolderAwareRequestFilter`       | http>servlet-api-provision                  |
+| **JAAS_API_SUPPORT_FILTER**      | `JaasApiIntegrationFilter`                      | http>jaas-api-provision                     |
+| **REMEMBER_ME_FILTER**           | `RememberMeAuthenticationFilter`                | http>remember-me                            |
+| **ANONYMOUS_FILTER**             | `AnonymousAuthenticationFilter`                 | http>anonymous                              |
+| **SESSION_MANAGEMENT_FILTER**    | `SessionManagementFilter`                       | http>session-management                     |
+| **EXCEPTION_TRANSLATION_FILTER** | `ExceptionTranslationFilter`                    | http                                        |
+| **FILTER_SECURITY_INTERCEPTOR**  | `FilterSecurityInterceptor`                     | http                                        |
+| **SWITCH_USER_FILTER**           | `SwitchUserFilter`                              | N/A                                         |
 
 ## 1.3、DelegatingFilterProxy
+
+> 为什么明明只是定义了一个Filter，上文中为什么说是一系列呢？
 
 ```XML
 <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <init-param>
+       <param-name>targetBeanName</param-name>
+       <param-value>springSecurityFilterChain</param-value>
+    </init-param>
 </filter>
 <filter-mapping>
     <filter-name>springSecurityFilterChain</filter-name>
@@ -81,25 +87,47 @@ Spring Security给我们定义好的FilterChain中Filter对应的位置顺序、
 
 上述的虽然只配置了一个Filter但是其内部很巧妙的利用了代理对象`DelegatingFilterProxy`将这[一系列的Filter](#1.1、Filter顺序)放入到Servlet容器中。
 
-`DelegatingFilterProxy`是Spring中定义的一个Filter实现类，其作用是代理真正的Filter实现类。也就是说在调用`DelegatingFilterProxy`的`doFilter()`方法时实际上调用的是其代理Filter的doFilter()方法。
+`DelegatingFilterProxy`是Spring中定义的一个Filter实现类，其作用是代理真正的Filter实现类。也就是说在调用`DelegatingFilterProxy`的`doFilter()`方法时实际上调用的是其代理对象的doFilter()方法。
 
 `DelegatingFilterProxy`的代理对象，必须是一个被Spring容器管理的组件。正因为如此，其代理对象可以使用IOC方式将Spring上下文中的Bean注入到代理对象中。
 
-那么`DelegatingFilterProxy`如何知道其所代理的Filter是哪个呢？这是通过其自身的一个叫targetBeanName的属性来确定的，通过该名称，`DelegatingFilterProxy`可以从`WebApplicationContext`中获取指定的bean作为代理对象。该属性可以通过在web.xml中定义DelegatingFilterProxy时通过init-param来指定，如果未指定的话将默认取其在web.xml中声明时定义的名称。
+那么`DelegatingFilterProxy`如何知道其所代理的Filter是哪个呢？这是通过其自身的一个叫targetBeanName的属性来确定的，通过该名称，`DelegatingFilterProxy`可以从`WebApplicationContext`中获取指定的bean作为代理对象。该属性可以通过在web.xml中定义DelegatingFilterProxy时通过init-param来指定，如果未指定的话将默认取其在web.xml中声明时定义的名称，也就是`filter-name`配置的名称。
 
 在上述的配置当中，`DelegatingFilterProxy`代理的就是名为`springSecurityFilterChain`的Filter。
 
-> 需要注意的是被代理的Filter的初始化方法init()和销毁方法destroy()默认是不会被执行的。通过设置DelegatingFilterProxy的targetFilterLifecycle属性为true，可以使被代理Filter与DelegatingFilterProxy具有同样的生命周期
+需要注意的是被代理的Filter的初始化方法init()和销毁方法destroy()默认是不会被执行的。通过设置`DelegatingFilterProxy`的`targetFilterLifecycle`属性为`true`，可以使被代理Filter与DelegatingFilterProxy具有同样的生命周期。
 
 ## 1.4、FilterChainProxy
 
- Spring Security底层是通过一系列的Filter来工作的，每个Filter都有其各自的功能，而且各个Filter之间还有关联关系，所以它们的组合顺序也是非常重要的。
+Spring Security底层是通过[一系列的Filter](#1.1、Filter顺序)来工作的，每个Filter都有其各自的功能，而且各个Filter之间还有关联关系，所以它们的组合顺序也是非常重要的。
 
-使用Spring Security时，是通过`DelegatingFilterProxy`代理了`FilterChainFroxy`这个对象，其可以包含多个`SecurityFilterChain`对象。但是某个请求只会对应一个`SecurityFilterChain`，而一个`SecurityFilterChain`中又可以包含有多个Filter。
+使用Spring Security时，`DelegatingFilterProxy`代理的就是一个`FilterChainFroxy`，其可以包含多个`SecurityFilterChain`对象。但是某个请求只会对应一个`SecurityFilterChain`，而一个`SecurityFilterChain`中又可以包含有多个Filter。
 
-当我们基于XML配置的方式使用Spring Security时，系统会自动为我们注册一个名为springSecurityFilterChain类型为FilterChainProxy的bean。而且每一个http元素的定义都将拥有自己的FilterChain，而FilterChain中所拥有的Filter则会根据定义的服务自动增减。所以我们不需要显示的再定义这些Filter对应的bean了，除非你想实现自己的逻辑，需要自定义实现。
+```java
+public class FilterChainProxy extends GenericFilterBean {
 
- Spring Security允许我们在配置文件中配置多个http元素，以针对不同形式的URL使用不同的安全控制。Spring Security将会为每一个http元素创建对应的FilterChain，同时按照它们的声明顺序加入到FilterChainProxy。所以当我们同时定义多个http元素时要确保将更具有特性的URL配置在前。
+    private final static String FILTER_APPLIED = FilterChainProxy.class.getName().concat(".APPLIED");
+
+    // SecurityFilterChain集合
+    private List<SecurityFilterChain> filterChains;
+    
+    // 其余内容省略
+	
+}
+```
+
+```java
+public interface SecurityFilterChain {
+
+    boolean matches(HttpServletRequest request);
+
+    List<Filter> getFilters();
+}
+```
+
+当我们基于XML配置的方式使用Spring Security时，系统会自动为我们注册一个名为springSecurityFilterChain类型为FilterChainProxy的bean。而且每一个http元素的定义都将拥有自己的`SecurityFilterChain`，而`SecurityFilterChain`中所拥有的Filter则会根据定义的服务自动增减。所以我们不需要显示的再定义这些Filter对应的bean了，除非你想实现自己的逻辑，需要自定义实现。
+
+ Spring Security允许我们在配置文件中配置多个http元素，以针对不同形式的URL使用不同的安全控制。Spring Security将会为每一个http元素创建对应的`SecurityFilterChain`，同时按照它们的声明顺序加入到`FilterChainProxy`。所以当我们同时定义多个http元素时要确保将更具有特性的URL配置在前。
 
 ```xml
 <security:http pattern="/login*.jsp*" security="none"/>
@@ -115,16 +143,16 @@ Spring Security给我们定义好的FilterChain中Filter对应的位置顺序、
 
 ## 1.5、Spring Security内置核心的Filter
 
-通过前面的介绍我们知道Spring Security是通过Filter来工作的，为保证Spring Security的顺利运行，其内部实现了一系列的Filter。这其中有几个是在使用Spring Security的Web应用中必定会用到的。接下来我们来简要的介绍以下几个Filter：
+通过前面的介绍我们知道Spring Security是通过Filter来工作的，为保证Spring Security的顺利运行，其内部实现了一系列的Filter。这其中有几个是在使用Spring Security的Web应用中**必定**会用到的。接下来简要的介绍以下几个Filter：
 
 - `FilterSecurityInterceptor`
 - `ExceptionTranslationFilter`
 - `SecurityContextPersistenceFilter`
 - `UsernamePasswordAuthenticationFilter`
 
-在我们使用http元素时前三者会自动添加到对应的FilterChain中，当我们使用了form-login元素时`UsernamePasswordAuthenticationFilter`也会自动添加到FilterChain中。
+在我们使用http元素时前三者会自动添加到对应的`SecurityFilterChain`中，当我们使用了form-login元素时`UsernamePasswordAuthenticationFilter`也会自动添加到`SecurityFilterChain`中。
 
-所以我们在利用custom-filter往FilterChain中添加自己定义的这些Filter时需要注意它们的位置。
+所以我们在利用custom-filter往`SecurityFilterChain`中添加自己定义的这些Filter时需要注意它们的位置。
 
 ### 1.5.1、FilterSecurityInterceptor
 
