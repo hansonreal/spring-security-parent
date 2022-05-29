@@ -20,6 +20,7 @@
         <module>security-07-cache</module>
         <module>security-08-intercept-url</module>
         <module>security-09-filter</module>
+        <module>security-10-logout</module>
     </modules>
 
     <artifactId>spring-security-xml</artifactId>
