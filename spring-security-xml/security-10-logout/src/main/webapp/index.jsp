@@ -13,8 +13,5 @@ This is home page!
         <a href="${pageContext.request.contextPath}/admin.jsp">ADMIN_USER权限测试</a>
     </span>
 
-<span>
-    <a href="${pageContext.request.contextPath}/logout.do">退出</a>
-</span>
 </body>
 </html>

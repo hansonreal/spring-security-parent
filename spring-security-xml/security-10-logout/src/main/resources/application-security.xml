@@ -16,7 +16,7 @@
         </security:authentication-provider>
     </security:authentication-manager>
 
-    <security:http pattern="login.jsp" security="none"/>
+    <security:http pattern="/login.jsp" security="none"/>
     <security:http auto-config="true" authentication-manager-ref="authenticationManager">
         <security:form-login login-page="/login.jsp" login-processing-url="/login.do"
                              username-parameter="username"
@@ -27,7 +27,7 @@
         <security:intercept-url pattern="/login.jsp" access="ROLE_ANONYMOUS"/>
         <security:intercept-url pattern="/user.jsp" access="ROLE_USER"/>
         <security:intercept-url pattern="/admin.jsp" access="ROLE_ADMIN"/>
-        <security:logout logout-url="/logout.do" logout-success-url="login.jsp"/>
+        <security:logout logout-url="/logout.do" logout-success-url="/login.jsp"/>
     </security:http>
 
 </beans>
