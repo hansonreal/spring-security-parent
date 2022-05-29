@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd">
+    <!-- AuthenticationEntryPoint，引导用户进行登录 -->
+    <bean id="authEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+        <constructor-arg name="loginFormUrl" value="/login.jsp"/>
+    </bean>
+    <!-- SecurityFilterChain 配置 -->
+    <security:http entry-point-ref="authEntryPoint">
+        <security:logout delete-cookies="JSESSIONID"/>
+        <security:intercept-url pattern="/login*.jsp*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <security:intercept-url pattern="/**" access="ROLE_USER"/>
+        <!-- 添加自己定义的AuthenticationFilter到FilterChain的FORM_LOGIN_FILTER位置 -->
+        <security:custom-filter ref="usernamePasswordAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
+    </security:http>
+    <!-- 认证管理器 -->
+    <security:authentication-manager id="authenticationManager">
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user name="admin" password="admin" authorities="ROLE_ADMIN,ROLE_USER"/>
+                <security:user name="user" password="user" authorities="ROLE_USER"/>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+    <!-- 认证过滤器URL匹配器 -->
+    <bean id="filterProcessUrlRequestMatcher"
+          class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+        <constructor-arg name="pattern" value="/login.do"/>
+    </bean>
+    <!-- 认证过滤器 -->
+    <bean id="usernamePasswordAuthenticationFilter"
+          class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="usernameParameter" value="c_username"/>
+        <property name="passwordParameter" value="c_password"/>
+        <property name="postOnly" value="true"/>
+        <property name="requiresAuthenticationRequestMatcher" ref="filterProcessUrlRequestMatcher"/>
+    </bean>
+</beans>

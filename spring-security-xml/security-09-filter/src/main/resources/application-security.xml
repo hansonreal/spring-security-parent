@@ -22,7 +22,6 @@
     </security:http>
 
 
-
     <security:authentication-manager id="authenticationManager">
         <security:authentication-provider>
             <security:user-service>
@@ -48,17 +47,46 @@
     </bean>
 
 
-    <!--
-        <bean id="filterSecurityInterceptor"  class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
-            <property name="authenticationManager" ref="authenticationManager" />
-            <property name="accessDecisionManager" ref="accessDecisionManager" />
-            <property name="securityMetadataSource">
-                <security:filter-security-metadata-source>
-                    <security:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
-                    <security:intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN" />
-                </security:filter-security-metadata-source>
-            </property>
-        </bean>
-    -->
+    <!---->
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.ConsensusBased"/>
+
+    <bean id="filterSecurityInterceptor"
+          class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="accessDecisionManager" ref="accessDecisionManager"/>
+        <property name="securityMetadataSource">
+            <security:filter-security-metadata-source>
+                <security:intercept-url pattern="/admin/**" access="ROLE_ADMIN"/>
+                <security:intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN"/>
+            </security:filter-security-metadata-source>
+        </property>
+    </bean>
+
+
+    <bean id="securityContextRepository"
+          class="org.springframework.security.web.context.HttpSessionSecurityContextRepository">
+        <property name="allowSessionCreation" value="true"/>
+    </bean>
+
+    <bean id="securityContextPersistenceFilter"
+          class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
+        <constructor-arg name="repo" ref="securityContextRepository"/>
+    </bean>
+
+
+    <bean id="filterProcessUrlRequestMatcher"
+          class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+        <constructor-arg name="pattern" value="/login.do"/>
+    </bean>
+
+    <bean id="usernamePasswordAuthenticationFilter"
+          class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="usernameParameter" value="c_username"/>
+        <property name="passwordParameter" value="c_password"/>
+        <property name="postOnly" value="true"/>
+        <property name="requiresAuthenticationRequestMatcher" ref="filterProcessUrlRequestMatcher"/>
+    </bean>
+
 
 </beans>
