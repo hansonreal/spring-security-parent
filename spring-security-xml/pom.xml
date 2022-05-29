@@ -21,6 +21,7 @@
         <module>security-08-intercept-url</module>
         <module>security-09-filter</module>
         <module>security-10-logout</module>
+        <module>security-11-anonymousAuthentication</module>
     </modules>
 
     <artifactId>spring-security-xml</artifactId>

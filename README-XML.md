@@ -1,3 +1,5 @@
+[TOC]
+
 # 1、Spring Security 学习手册
 
 > Spring 版本为3.2.6.RELEASE
@@ -21,3 +23,6 @@
 ## 1.9、[Spring Security filter过滤器](./docs/xml/Spring Security-09.md)
 
 ## 1.10、[Spring Security 退出登录](./docs/xml/Spring Security-10.md)
+
+## 1.11、[Spring Security 匿名认证](./docs/xml/Spring Security-11.md)
+
