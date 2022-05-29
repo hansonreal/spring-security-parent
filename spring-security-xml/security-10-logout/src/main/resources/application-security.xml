@@ -27,7 +27,7 @@
         <security:intercept-url pattern="/login.jsp" access="ROLE_ANONYMOUS"/>
         <security:intercept-url pattern="/user.jsp" access="ROLE_USER"/>
         <security:intercept-url pattern="/admin.jsp" access="ROLE_ADMIN"/>
-        <security:logout logout-url="/logout.do"/>
+        <security:logout logout-url="/logout.do" logout-success-url="login.jsp"/>
     </security:http>
 
 </beans>
