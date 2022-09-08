@@ -78,7 +78,7 @@
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <configuration>
-                    <path>/security-10</path>
+                    <path>/security-11</path>
                     <uriEncoding>UTF-8</uriEncoding>
                     <port>8010</port>
                 </configuration>
