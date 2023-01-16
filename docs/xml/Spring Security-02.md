@@ -64,7 +64,7 @@ http元素下的form-login元素是用来定义表单登录信息的。当我们
 
 #### 1.1.1.2、登录界面
 
-[login.jsp](spring-security-xml/security-02-login/src/main/webapp/login.jsp)
+[login.jsp](../../spring-security-xml/security-02-login/src/main/webapp/login.jsp)
 
 ### 1.1.2、自定义登录成功之后处理
 
